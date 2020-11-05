@@ -20,14 +20,14 @@
 			function init() {
 
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2500 );
-				camera.position.z = 800;
-				camera.position.y = 300;
+				camera.position.z = 500;
+				camera.position.y = 200;
 				camera.position.x = 250;
 
 				scene = new THREE.Scene();
 
 				var texture = new THREE.TextureLoader().load( 'wall.jpg' );
-				var texture_roof = new THREE.TextureLoader().load( 'bricks_0013_base_color_2k.jpg' );
+				var texture_roof = new THREE.TextureLoader().load( 'vieux-fond-texture-tuiles-toit-altere-rouge-orange_52137-26746.jpg' );
 				var texture_ground = new THREE.TextureLoader().load( 'ground_0008_base_color_2k.jpg' );
 
 				//GROUND
