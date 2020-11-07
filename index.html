@@ -22,11 +22,13 @@
 
 				scene = new THREE.Scene();
 
+				//renderer
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
 
+				//camera
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2500 );
 				camera.position.z = 500;
 				camera.position.y = 200;
@@ -35,6 +37,7 @@
 				//OrbitControls
 				controls = new OrbitControls( camera, renderer.domElement );
 
+				//textures
 				var texture = new THREE.TextureLoader().load( 'textures/wall.jpg' );
 				var texture_roof = new THREE.TextureLoader().load( 'textures/vieux-fond-texture-tuiles-toit-altere-rouge-orange_52137-26746.jpg' );
 				var texture_ground = new THREE.TextureLoader().load( 'textures/ground_0008_base_color_2k.jpg' );
