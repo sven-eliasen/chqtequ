@@ -1,6 +1,0 @@
-
-
-Posayidon
-Gelven
-Carlito
-Yovinish

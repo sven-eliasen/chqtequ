@@ -4,31 +4,44 @@
 		<title>three.js webgl - geometry - cube</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="main.css">
+		<link type="text/css" rel="stylesheet" href="css/main.css">
 	</head>
 	<body>
 
 		<script type="module">
 
 			//test
-			import * as THREE from './three.module.js';
+			import * as THREE from './js/three.module.js';
+			import { OrbitControls } from './js/OrbitControls.js';
 
-			var camera, scene, renderer;
+			var camera, scene, renderer, controls;
 			var wall_tower1, roof_tower1, wall1, wall_tower2, roof_tower2, wall2, wall_tower3, roof_tower3, wall3, wall4, wall_tower4, roof_tower4, ground_mesh;
 			init();
 			animate();
 			function init() {
+
+				scene = new THREE.Scene();
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
 
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2500 );
 				camera.position.z = 500;
 				camera.position.y = 200;
 				camera.position.x = 250;
 
-				scene = new THREE.Scene();
+				//OrbitControls
+				controls = new OrbitControls( camera, renderer.domElement );
 
-				var texture = new THREE.TextureLoader().load( 'wall.jpg' );
-				var texture_roof = new THREE.TextureLoader().load( 'vieux-fond-texture-tuiles-toit-altere-rouge-orange_52137-26746.jpg' );
-				var texture_ground = new THREE.TextureLoader().load( 'ground_0008_base_color_2k.jpg' );
+				var texture = new THREE.TextureLoader().load( 'textures/wall.jpg' );
+				var texture_roof = new THREE.TextureLoader().load( 'textures/vieux-fond-texture-tuiles-toit-altere-rouge-orange_52137-26746.jpg' );
+				var texture_ground = new THREE.TextureLoader().load( 'textures/ground_0008_base_color_2k.jpg' );
+
+				texture.wrapS = THREE.RepeatWrapping;
+				texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set(1, 0.5);
 
 				//GROUND
 				var ground = new THREE.PlaneBufferGeometry( 5000, 5000, 1 );
@@ -121,13 +134,6 @@
 				scene.add(wall4);
 				scene.add(wall_tower4);
 				scene.add(roof_tower4);
-
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
-
-				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
