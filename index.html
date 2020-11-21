@@ -43,11 +43,12 @@
 
 				// setup spotlight
 				spotLight = new THREE.SpotLight( 0xffffff, 1);
-				spotLight.position.set( 15, 40, 35 );
-				spotLight.angle = Math.PI / 4;
+				spotLight.position.set( 200, 800, 200 );
+			  spotLight.angle = Math.PI / 3;
 				spotLight.penumbra = 0.1;
 				spotLight.decay = 2;
-				spotLight.distance = 200;
+				spotLight.distance = 1500;
+				spotLight.intensity = 1.5;
 
 				// setup spotlight shadow effect
 				spotLight.castShadow = true;
@@ -57,7 +58,7 @@
 				spotLight.shadow.camera.far = 200;
 				spotLight.shadow.focus = 1;
 
-				scene.add( spotLight);
+				scene.add( spotLight );
 
 				// light helper
 				lightHelper = new THREE.SpotLightHelper( spotLight );
@@ -66,14 +67,39 @@
 				shadowCameraHelper = new THREE.CameraHelper( spotLight.shadow.camera );
 				scene.add(shadowCameraHelper);
 
+				// test light
+				//const light = new THREE.DirectionalLight( 0xffffff, 0.6, 100 );
+				//light.position.x = 300;
+				//light.position.y = 250;
+				//light.position.z = - 500;
+
+				//Set up shadow properties for the light
+				//light.castShadow = true;
+				//light.shadow.mapSize.width = 512; // default
+				//light.shadow.mapSize.height = 512; // default
+				//light.shadow.camera.near = 0.5; // default
+				//light.shadow.camera.far = 300; // default
+				//light.shadow.focus = 1;
+				//scene.add( light );
+
+				//const directionalLightHelper = new THREE.DirectionalLightHelper( light, 5 );
+        //scene.add( directionalLightHelper );
+
 				//camera
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2500 );
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 3000 );
 				camera.position.z = 500;
 				camera.position.y = 200;
 				camera.position.x = 250;
 
 				//OrbitControls
 				controls = new OrbitControls( camera, renderer.domElement );
+				controls.keys = {
+					LEFT: 37,
+					UP: 38,
+					RIGHT: 39,
+					BOTTOM: 40
+				};
+				controls.keyPanSpeed = 15
 
 				//textures
 				var texture = new THREE.TextureLoader().load( 'textures/wall.jpg' );
@@ -101,6 +127,7 @@
 
 				wall_tower1 = new THREE.Mesh( geometry, material );
 				wall_tower1.castShadow = true;
+				wall_tower1.receiveShadow = true;
 
 
 				//ROOF
@@ -113,11 +140,13 @@
 				var geometry2 = new THREE.BoxBufferGeometry( 500, 100, 40 );
 				wall1= new THREE.Mesh( geometry2, material );
 				wall1.castShadow = true;
+				wall1.receiveShadow = true;
 
 
 				var geometry3 = geometry;
 				wall_tower2 = new THREE.Mesh(geometry3, material);
 				wall_tower2.castShadow = true;
+				wall_tower2.receiveShadow = true;
 
 				var geometry4 = geometry1;
 				var material4 = material1;
@@ -127,22 +156,27 @@
 				var geometry5 = new THREE.BoxBufferGeometry( 40, 100, 500 );
 				wall2= new THREE.Mesh( geometry5, material );
 				wall2.castShadow = true;
+				wall2.receiveShadow = true;
 
 				wall_tower3 = new THREE.Mesh(geometry, material);
 				wall_tower3.castShadow = true;
+				wall_tower3.receiveShadow = true;
 
 				roof_tower3 = new THREE.Mesh(geometry1, material1);
 				roof_tower3.castShadow = true;
 
 				wall3= new THREE.Mesh( geometry5, material );
 				wall3.castShadow = true;
+				wall3.receiveShadow = true;
 
 				var geometry9 = new THREE.BoxBufferGeometry( 500, 100, 40 );
 				wall4= new THREE.Mesh( geometry9, material );
 				wall4.castShadow = true;
+				wall4.receiveShadow = true;
 
 				wall_tower4 = new THREE.Mesh(geometry, material);
 				wall_tower4.castShadow = true;
+				wall_tower4.receiveShadow = true;
 
 				roof_tower4 = new THREE.Mesh(geometry1, material1);
 				roof_tower4.castShadow = true;
@@ -220,6 +254,7 @@
 
 				lightHelper.update();
 				shadowCameraHelper.update();
+				//directionalLightHelper.update();
 				renderer.render( scene, camera );
 
 			}
