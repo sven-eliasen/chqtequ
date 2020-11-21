@@ -15,7 +15,7 @@
 			import { OrbitControls } from './js/OrbitControls.js';
 
 			// light/shadow variables
-			let spotLight, lightHelper, shadowCameraHelper;
+			let spotLight, lightHelper, shadowCameraHelper, directionalLight, directionalLightHelper;
 
 			var camera, scene, renderer, controls;
 			var wall_tower1, roof_tower1, wall1, wall_tower2, roof_tower2, wall2, wall_tower3, roof_tower3, wall3, wall4, wall_tower4, roof_tower4, ground_mesh;
@@ -41,49 +41,27 @@
 				const ambient = new THREE.AmbientLight(0xffffff, 0.1);
 				scene.add( ambient );
 
-				// setup spotlight
-				spotLight = new THREE.SpotLight( 0xffffff, 1);
-				spotLight.position.set( 200, 800, 200 );
-			  spotLight.angle = Math.PI / 3;
-				spotLight.penumbra = 0.1;
-				spotLight.decay = 2;
-				spotLight.distance = 1500;
-				spotLight.intensity = 1.5;
-
-				// setup spotlight shadow effect
-				spotLight.castShadow = true;
-				spotLight.shadow.mapSize.width = 512;
-				spotLight.shadow.mapSize.height = 512;
-				spotLight.shadow.camera.near = 10;
-				spotLight.shadow.camera.far = 200;
-				spotLight.shadow.focus = 1;
-
-				scene.add( spotLight );
-
-				// light helper
-				lightHelper = new THREE.SpotLightHelper( spotLight );
-				scene.add( lightHelper );
-
-				shadowCameraHelper = new THREE.CameraHelper( spotLight.shadow.camera );
-				scene.add(shadowCameraHelper);
-
 				// test light
-				//const light = new THREE.DirectionalLight( 0xffffff, 0.6, 100 );
-				//light.position.x = 300;
-				//light.position.y = 250;
-				//light.position.z = - 500;
+				directionalLight = new THREE.DirectionalLight( 0xffffff, 0.4 );
+				directionalLight.position.set( -100, 90, 100 );
 
 				//Set up shadow properties for the light
-				//light.castShadow = true;
-				//light.shadow.mapSize.width = 512; // default
-				//light.shadow.mapSize.height = 512; // default
-				//light.shadow.camera.near = 0.5; // default
-				//light.shadow.camera.far = 300; // default
-				//light.shadow.focus = 1;
-				//scene.add( light );
+				directionalLight.castShadow = true;
+				directionalLight.shadow.camera.near = 1;
+				directionalLight.shadow.camera.far = 5000;
+				const size = 1000;
+				directionalLight.shadow.camera.left = -size;
+				directionalLight.shadow.camera.right = size;
+				directionalLight.shadow.camera.top = size;
+				directionalLight.shadow.camera.bottom = -size;
 
-				//const directionalLightHelper = new THREE.DirectionalLightHelper( light, 5 );
-        //scene.add( directionalLightHelper );
+				scene.add( directionalLight );
+
+				directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, 5 );
+        		//scene.add( directionalLightHelper );
+
+				shadowCameraHelper = new THREE.CameraHelper( directionalLight.shadow.camera );
+				//scene.add(shadowCameraHelper);
 
 				//camera
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 3000 );
@@ -252,10 +230,10 @@
 
 			function render() {
 
-				lightHelper.update();
-				shadowCameraHelper.update();
+				//lightHelper.update();
+				//shadowCameraHelper.update();
 				//directionalLightHelper.update();
-				renderer.render( scene, camera );
+				//renderer.render( scene, camera );
 
 			}
 
