@@ -249,7 +249,7 @@
 
 				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
 				var geometry = new THREE.CircleBufferGeometry( 30,100);
-				var material = new THREE.MeshBasicMaterial( { map: texture } );
+				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 100, specular : 0xaaaaaa, opacity : 0.5, transparent : true } );
 
 				circle = new THREE.Mesh( geometry, material );
 
@@ -268,7 +268,7 @@
 			// animation loop
 			function animate() {
 				requestAnimationFrame( animate );
-				circle.rotation.x +=0.3;
+				circle.rotation.z +=0.02;
 				renderer.render( scene, camera );
 
 			}
