@@ -22,10 +22,10 @@
 			init();
 			animate();
 			render();
+			magic_object();
 			function init() {
 
 				scene = new THREE.Scene();
-				magic_object();
 				//renderer
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -230,6 +230,8 @@
 				circle.receiveShadow = true;
 				var xAxis = new THREE.Vector3(1,0,0);
 				circle.rotateOnAxis(xAxis, -1.5);
+				circle.translateZ( 10 );
+
 				scene.add(circle)
 			}
 
