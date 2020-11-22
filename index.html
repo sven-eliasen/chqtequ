@@ -248,18 +248,17 @@
 			function magic_object(){
 
 				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
-				var geometry = new THREE.CircleBufferGeometry( 50,100);
+				var geometry = new THREE.CylinderBufferGeometry( 50,50,10,200);
 				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 100, specular : 0xffffff, opacity : 0.7, transparent : true } );
 
 				circle = new THREE.Mesh( geometry, material );
 
 				circle.position.x = 300;
-				circle.position.y = 20;
+				circle.position.y = 100;
 				circle.position.z = -250;
 				circle.castShadow = true;
 				circle.receiveShadow = true;
-				var xAxis = new THREE.Vector3(1,0,0);
-				circle.rotateOnAxis(xAxis, -1.5);
+
 
 				scene.add(circle)
 			}
@@ -268,7 +267,7 @@
 			// animation loop
 			function animate() {
 				requestAnimationFrame( animate );
-				circle.rotation.z +=0.02;
+				circle.rotation.y +=0.02;
 				renderer.render( scene, camera );
 
 			}
