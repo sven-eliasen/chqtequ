@@ -248,8 +248,8 @@
 			function magic_object(){
 
 				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
-				var geometry = new THREE.CircleBufferGeometry( 30,100);
-				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 100, specular : 0xaaaaaa, opacity : 0.5, transparent : true } );
+				var geometry = new THREE.CircleBufferGeometry( 50,100);
+				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 100, specular : 0xffffff, opacity : 0.7, transparent : true } );
 
 				circle = new THREE.Mesh( geometry, material );
 
