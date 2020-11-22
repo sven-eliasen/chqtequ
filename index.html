@@ -25,7 +25,7 @@
 
 
 			// world objects
-			let towers, roofs, walls, ground, directionalLight, ambient;
+			let towers, roofs, walls, ground, directionalLight, ambient, circle;
 
 			// load textures
 			let texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
@@ -47,9 +47,6 @@
 			init();
 			animate();
 			render();
-
-
-			// function to initiate the whole scene
 			function init() {
 
 
@@ -104,6 +101,7 @@
 				camera.lookAt(scene.position.set(-200, 0, 200));
 
 
+				magic_object();
 				// setup OrbitControls
 				controls = new OrbitControls( camera, renderer.domElement );
 				controls.keys = {
@@ -161,12 +159,30 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
+			//
+			function magic_object(){
+
+				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
+				var geometry = new THREE.CylinderBufferGeometry( 50,50,10,200);
+				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 100, specular : 0xffffff, opacity : 0.7, transparent : true } );
+
+				circle = new THREE.Mesh( geometry, material );
+
+				circle.position.x = 300;
+				circle.position.y = 100;
+				circle.position.z = -250;
+				circle.castShadow = true;
+				circle.receiveShadow = true;
+
+
+				scene.add(circle)
+			}
 
 
 			// animation loop
 			function animate() {
-
 				requestAnimationFrame( animate );
+				circle.rotation.y +=0.02;
 				renderer.render( scene, camera );
 
 			}
