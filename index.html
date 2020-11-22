@@ -24,14 +24,13 @@
 
 
 			// TODO: améliorer ce bordel
-			var wall_tower1, roof_tower1, wall1, wall_tower2, roof_tower2, wall2, wall_tower3, roof_tower3, wall3, wall4, wall_tower4, roof_tower4, ground_mesh;
+			var circle,wall_tower1, roof_tower1, wall1, wall_tower2, roof_tower2, wall2, wall_tower3, roof_tower3, wall3, wall4, wall_tower4, roof_tower4, ground_mesh;
 
 
 			// basic functions call
 			init();
 			animate();
 			render();
-			magic_object();
 			function init() {
 
 
@@ -85,6 +84,7 @@
 				camera.lookAt(scene.position.set(-200, 0, 200));
 
 
+				magic_object();
 				// setup OrbitControls
 				controls = new OrbitControls( camera, renderer.domElement );
 				controls.keys = {
@@ -247,8 +247,7 @@
 			//
 			function magic_object(){
 
-				var circle;
-				var texture = new THREE.TextureLoader().load( 'textures/wall.jpg' );;
+				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
 				var geometry = new THREE.CircleBufferGeometry( 30,100);
 				var material = new THREE.MeshBasicMaterial( { map: texture } );
 
@@ -261,7 +260,6 @@
 				circle.receiveShadow = true;
 				var xAxis = new THREE.Vector3(1,0,0);
 				circle.rotateOnAxis(xAxis, -1.5);
-				circle.translateZ( 10 );
 
 				scene.add(circle)
 			}
@@ -269,8 +267,8 @@
 
 			// animation loop
 			function animate() {
-
 				requestAnimationFrame( animate );
+				circle.rotation.x +=0.3;
 				renderer.render( scene, camera );
 
 			}
