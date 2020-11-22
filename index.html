@@ -81,9 +81,10 @@
 
 				// setup camera
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 3000 );
-				camera.position.z = 500; //
-				camera.position.y = 200; // à changer
-				camera.position.x = 250; //
+				camera.position.z = 20;
+				camera.position.y = 450;
+				camera.position.x = -350;
+				camera.lookAt(scene.position.set(-200, 0, 200));
 
 
 				// setup OrbitControls
