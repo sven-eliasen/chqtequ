@@ -99,9 +99,9 @@
 
 
 				// load textures
-				var texture = new THREE.TextureLoader().load( 'textures/wall.jpg' );
-				var texture_roof = new THREE.TextureLoader().load( 'textures/vieux-fond-texture-tuiles-toit-altere-rouge-orange_52137-26746.jpg' );
-				var texture_ground = new THREE.TextureLoader().load( 'textures/ground_0008_base_color_2k.jpg' ); // à changer pour une texture grise
+				var texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
+				var texture_roof = new THREE.TextureLoader().load( 'textures/roof.jpg' );
+				var texture_ground = new THREE.TextureLoader().load( 'textures/ground.jpg' );
 
 
 				// setup texture to repeat (instead of cover)
@@ -128,7 +128,7 @@
 
 				//TOWER
 				var geometry = new THREE.CylinderBufferGeometry( 40, 40, 200, 200 );
-				var material = new THREE.MeshPhongMaterial( { map: texture } );
+				var material = new THREE.MeshPhongMaterial( { map: texture_wall } );
 
 				wall_tower1 = new THREE.Mesh( geometry, material );
 				wall_tower1.castShadow = true;
