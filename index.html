@@ -20,11 +20,22 @@
 
 
 			// basic variables
-			var camera, scene, renderer, controls;
+			let camera, scene, renderer, controls;
 
 
 			// TODO: améliorer ce bordel
-			var wall_tower1, roof_tower1, wall1, wall_tower2, roof_tower2, wall2, wall_tower3, roof_tower3, wall3, wall4, wall_tower4, roof_tower4, ground_mesh;
+			let wall_tower1, roof_tower1, wall1, wall_tower2, roof_tower2, wall2, wall_tower3, roof_tower3, wall3, wall4, wall_tower4, roof_tower4, ground;
+
+			// load textures
+			let texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
+			let texture_roof = new THREE.TextureLoader().load( 'textures/roof.jpg' );
+			let texture_ground = new THREE.TextureLoader().load( 'textures/ground.jpg' );
+			let texture_background = new THREE.TextureLoader().load( 'textures/universe.jpg' );
+
+
+			// geometry and materials variables
+			let geometry_tower = new THREE.CylinderBufferGeometry( 40, 40, 200, 200 );
+			let material_wall = new THREE.MeshPhongMaterial( { map: texture_wall } );
 
 
 			// basic functions call
@@ -65,11 +76,11 @@
 				directionalLight.castShadow = true;
 				directionalLight.shadow.camera.near = 1;
 				directionalLight.shadow.camera.far = 5000;
-				const size = 1000;
-				directionalLight.shadow.camera.left = -size;
-				directionalLight.shadow.camera.right = size;
-				directionalLight.shadow.camera.top = size;
-				directionalLight.shadow.camera.bottom = -size;
+				let shadowCameraSize = 1000;
+				directionalLight.shadow.camera.left = -shadowCameraSize;
+				directionalLight.shadow.camera.right = shadowCameraSize;
+				directionalLight.shadow.camera.top = shadowCameraSize;
+				directionalLight.shadow.camera.bottom = -shadowCameraSize;
 				scene.add( directionalLight );
 
 				directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, 5 );
@@ -98,13 +109,6 @@
 				controls.keyPanSpeed = 15
 
 
-				// load textures
-				const texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
-				const texture_roof = new THREE.TextureLoader().load( 'textures/roof.jpg' );
-				const texture_ground = new THREE.TextureLoader().load( 'textures/ground.jpg' );
-				const texture_background = new THREE.TextureLoader().load( 'textures/universe.jpg' );
-
-
 				// setup background
 				scene.background = texture_background;
 
@@ -116,120 +120,115 @@
 
 
 				//GROUND
-				var ground = new THREE.PlaneBufferGeometry( 5000, 5000, 1 );
-				ground.rotateX(-Math.PI * 0.5); // setup horizontally
+				var geometry_ground = new THREE.PlaneBufferGeometry( 5000, 5000, 1 );
+				geometry_ground.rotateX(-Math.PI * 0.5); // setup horizontally
 				var ground_texture = new THREE.MeshPhongMaterial( { map: texture_ground, side: THREE.DoubleSide} );
-				ground_mesh = new THREE.Mesh(ground, ground_texture);
-				ground_mesh.receiveShadow = true;
-				scene.add( ground_mesh );
-				ground_mesh.position.y = -50;
-				ground_mesh.position.x = 250;
-				ground_mesh.position.z = -250;
+				ground = new THREE.Mesh(geometry_ground, ground_texture);
+				ground.receiveShadow = true;
+				scene.add( ground );
+				ground.position.y = -50;
+				ground.position.x = 250;
+				ground.position.z = -250;
 
 
 				// clean the whole bullshit of the rest of the function
 
 				//TOWER
-				var geometry = new THREE.CylinderBufferGeometry( 40, 40, 200, 200 );
-				var material = new THREE.MeshPhongMaterial( { map: texture_wall } );
-
-				wall_tower1 = new THREE.Mesh( geometry, material );
-				wall_tower1.castShadow = true;
-				wall_tower1.receiveShadow = true;
+				generate_tower();
 
 
 				//ROOF
-				var geometry1 = new THREE.ConeBufferGeometry( 50,50,32 );
-				var material1 = new THREE.MeshPhongMaterial( { map: texture_roof } );
-				roof_tower1= new THREE.Mesh( geometry1, material1 );
-				roof_tower1.castShadow = true;
+				//var geometry1 = new THREE.ConeBufferGeometry( 50,50,32 );
+				//var material1 = new THREE.MeshPhongMaterial( { map: texture_roof } );
+				//roof_tower1= new THREE.Mesh( geometry1, material1 );
+				//roof_tower1.castShadow = true;
 
 				//WALL
-				var geometry2 = new THREE.BoxBufferGeometry( 500, 100, 40 );
-				wall1= new THREE.Mesh( geometry2, material );
-				wall1.castShadow = true;
-				wall1.receiveShadow = true;
+				//var geometry2 = new THREE.BoxBufferGeometry( 500, 100, 40 );
+				//wall1= new THREE.Mesh( geometry2, material );
+				//wall1.castShadow = true;
+				//wall1.receiveShadow = true;
 
 
-				var geometry3 = geometry;
-				wall_tower2 = new THREE.Mesh(geometry3, material);
-				wall_tower2.castShadow = true;
-				wall_tower2.receiveShadow = true;
+				//var geometry3 = geometry;
+				//wall_tower2 = new THREE.Mesh(geometry3, material);
+				//wall_tower2.castShadow = true;
+				//wall_tower2.receiveShadow = true;
 
-				var geometry4 = geometry1;
-				var material4 = material1;
-				roof_tower2 = new THREE.Mesh(geometry4, material4);
-				roof_tower2.castShadow = true;
+				//var geometry4 = geometry1;
+				//var material4 = material1;
+				//roof_tower2 = new THREE.Mesh(geometry4, material4);
+				//roof_tower2.castShadow = true;
 
-				var geometry5 = new THREE.BoxBufferGeometry( 40, 100, 500 );
-				wall2= new THREE.Mesh( geometry5, material );
-				wall2.castShadow = true;
-				wall2.receiveShadow = true;
+				//var geometry5 = new THREE.BoxBufferGeometry( 40, 100, 500 );
+				//wall2= new THREE.Mesh( geometry5, material );
+				//wall2.castShadow = true;
+				//wall2.receiveShadow = true;
 
-				wall_tower3 = new THREE.Mesh(geometry, material);
-				wall_tower3.castShadow = true;
-				wall_tower3.receiveShadow = true;
+				//wall_tower3 = new THREE.Mesh(geometry, material);
+				//wall_tower3.castShadow = true;
+				//wall_tower3.receiveShadow = true;
 
-				roof_tower3 = new THREE.Mesh(geometry1, material1);
-				roof_tower3.castShadow = true;
+				//roof_tower3 = new THREE.Mesh(geometry1, material1);
+				//roof_tower3.castShadow = true;
 
-				wall3= new THREE.Mesh( geometry5, material );
-				wall3.castShadow = true;
-				wall3.receiveShadow = true;
+				//wall3= new THREE.Mesh( geometry5, material );
+				//wall3.castShadow = true;
+				//wall3.receiveShadow = true;
 
-				var geometry9 = new THREE.BoxBufferGeometry( 500, 100, 40 );
-				wall4= new THREE.Mesh( geometry9, material );
-				wall4.castShadow = true;
-				wall4.receiveShadow = true;
+				//var geometry9 = new THREE.BoxBufferGeometry( 500, 100, 40 );
+				//wall4= new THREE.Mesh( geometry9, material );
+				//wall4.castShadow = true;
+				//wall4.receiveShadow = true;
 
-				wall_tower4 = new THREE.Mesh(geometry, material);
-				wall_tower4.castShadow = true;
-				wall_tower4.receiveShadow = true;
+				//wall_tower4 = new THREE.Mesh(geometry, material);
+				//wall_tower4.castShadow = true;
+				//wall_tower4.receiveShadow = true;
 
-				roof_tower4 = new THREE.Mesh(geometry1, material1);
-				roof_tower4.castShadow = true;
+				//roof_tower4 = new THREE.Mesh(geometry1, material1);
+				//roof_tower4.castShadow = true;
 
-				roof_tower1.position.y = wall_tower1.position.y+125;
+				//roof_tower1.position.y = wall_tower1.position.y+125;
 
-				wall1.position.x = wall_tower1.position.x+250;
+				//wall1.position.x = wall_tower1.position.x+250;
 
-				wall_tower2.position.x = wall_tower1.position.x+500;
+				//wall_tower2.position.x = wall_tower1.position.x+500;
 
-				roof_tower2.position.x = wall_tower1.position.x+500;
-				roof_tower2.position.y = wall_tower1.position.y+125;
+				//roof_tower2.position.x = wall_tower1.position.x+500;
+				//roof_tower2.position.y = wall_tower1.position.y+125;
 
-				wall2.position.z = wall_tower1.position.z-250;
+				//wall2.position.z = wall_tower1.position.z-250;
 
-				wall_tower3.position.z = wall_tower1.position.z-500;
+				//wall_tower3.position.z = wall_tower1.position.z-500;
 
-				roof_tower3.position.z = wall_tower1.position.z-500;
-				roof_tower3.position.y = wall_tower1.position.y+125;
+				//roof_tower3.position.z = wall_tower1.position.z-500;
+				//roof_tower3.position.y = wall_tower1.position.y+125;
 
-				wall3.position.x = wall_tower1.position.x+500;
-				wall3.position.z = wall_tower1.position.z-250;
+				//wall3.position.x = wall_tower1.position.x+500;
+				//wall3.position.z = wall_tower1.position.z-250;
 
-				wall4.position.x = wall_tower1.position.x+250;
-				wall4.position.z = wall_tower1.position.z-500;
+				//wall4.position.x = wall_tower1.position.x+250;
+				//wall4.position.z = wall_tower1.position.z-500;
 
-				wall_tower4.position.x = wall_tower1.position.x+500;
-				wall_tower4.position.z = wall_tower1.position.z-500;
+				//wall_tower4.position.x = wall_tower1.position.x+500;
+				//wall_tower4.position.z = wall_tower1.position.z-500;
 
-				roof_tower4.position.x = wall_tower1.position.x+500;
-				roof_tower4.position.z = wall_tower1.position.z-500;
-				roof_tower4.position.y = wall_tower1.position.y+125;
+				//roof_tower4.position.x = wall_tower1.position.x+500;
+				//roof_tower4.position.z = wall_tower1.position.z-500;
+				//roof_tower4.position.y = wall_tower1.position.y+125;
 
-				scene.add(wall_tower1);
-				scene.add(roof_tower1);
-				scene.add(wall1);
-				scene.add(wall_tower2);
-				scene.add(roof_tower2);
-				scene.add(wall2);
-				scene.add(wall_tower3);
-				scene.add(roof_tower3);
-				scene.add(wall3);
-				scene.add(wall4);
-				scene.add(wall_tower4);
-				scene.add(roof_tower4);
+				//scene.add(wall_tower1);
+				//scene.add(roof_tower1);
+				//scene.add(wall1);
+				//scene.add(wall_tower2);
+				//scene.add(roof_tower2);
+				//scene.add(wall2);
+				//scene.add(wall_tower3);
+				//scene.add(roof_tower3);
+				//scene.add(wall3);
+				//scene.add(wall4);
+				//scene.add(wall_tower4);
+				//scene.add(roof_tower4);
 
 
 				// call resize on window changes
@@ -263,6 +262,34 @@
 				//shadowCameraHelper.update();
 				//directionalLightHelper.update();
 				//renderer.render( scene, camera );
+
+			}
+
+			function generate_tower() {
+				let varX = 0;
+				let varY = 0;
+				let varZ = 0;
+
+				for (var i = 1; i <= 4; i++) {
+					if (i === 2) {
+						varX = varX + 500;
+					}
+					if (i === 3) {
+						varX = varX - 500;
+						varZ = varZ - 500;
+					}
+					if (i === 4) {
+						varX = varX + 500;
+					}
+					let tower = new THREE.Mesh( geometry_tower, material_wall );
+					tower.castShadow = true;
+					tower.receiveShadow = true;
+					tower.position.x = varX;
+					tower.position.y = varY;
+					tower.position.z = varZ;
+
+					scene.add(tower);
+				}
 
 			}
 
