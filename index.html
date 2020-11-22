@@ -99,17 +99,21 @@
 
 
 				// load textures
-				var texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
-				var texture_roof = new THREE.TextureLoader().load( 'textures/roof.jpg' );
-				var texture_ground = new THREE.TextureLoader().load( 'textures/ground.jpg' );
+				const texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
+				const texture_roof = new THREE.TextureLoader().load( 'textures/roof.jpg' );
+				const texture_ground = new THREE.TextureLoader().load( 'textures/ground.jpg' );
+				const texture_background = new THREE.TextureLoader().load( 'textures/universe.jpg' );
+
+
+				// setup background
+				scene.background = texture_background;
 
 
 				// setup texture to repeat (instead of cover)
-				texture.wrapS = THREE.RepeatWrapping;
-				texture.wrapT = THREE.RepeatWrapping;
-				texture.repeat.set(1, 0.5);
+				texture_wall.wrapS = THREE.RepeatWrapping;
+				texture_wall.wrapT = THREE.RepeatWrapping;
+				texture_wall.repeat.set(1, 0.5);
 
-				// setup BACKGROUND
 
 
 				//GROUND
