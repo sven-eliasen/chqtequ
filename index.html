@@ -10,42 +10,58 @@
 
 		<script type="module">
 
-			//import
+			//imports
 			import * as THREE from './js/three.module.js';
 			import { OrbitControls } from './js/OrbitControls.js';
 
-			// light/shadow variables
-			let spotLight, lightHelper, shadowCameraHelper, directionalLight, directionalLightHelper;
 
+			// light and light helper variables
+			let shadowCameraHelper, directionalLight, directionalLightHelper;
+
+
+			// basic variables
 			var camera, scene, renderer, controls;
+
+
+			// TODO: améliorer ce bordel
 			var wall_tower1, roof_tower1, wall1, wall_tower2, roof_tower2, wall2, wall_tower3, roof_tower3, wall3, wall4, wall_tower4, roof_tower4, ground_mesh;
+
+
+			// basic functions call
 			init();
 			animate();
 			render();
+
+
+			// function to initiate the whole scene
 			function init() {
 
+
+				// create scene
 				scene = new THREE.Scene();
 
-				//renderer
+
+				// setup renderer
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
+
 
 				// enable shadows in renderer
 				renderer.shadowMap.enabled = true;
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 				renderer.outputEncoding = THREE.sRGBEncoding;
 
+
 				//create ambient (basic light)
 				const ambient = new THREE.AmbientLight(0xffffff, 0.1);
 				scene.add( ambient );
 
-				// test light
+
+				// setup light
 				directionalLight = new THREE.DirectionalLight( 0xffffff, 0.4 );
 				directionalLight.position.set( -100, 90, 100 );
-
-				//Set up shadow properties for the light
 				directionalLight.castShadow = true;
 				directionalLight.shadow.camera.near = 1;
 				directionalLight.shadow.camera.far = 5000;
@@ -54,22 +70,23 @@
 				directionalLight.shadow.camera.right = size;
 				directionalLight.shadow.camera.top = size;
 				directionalLight.shadow.camera.bottom = -size;
-
 				scene.add( directionalLight );
 
 				directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, 5 );
-        		//scene.add( directionalLightHelper );
+        //scene.add( directionalLightHelper ); DEBUG: not for prod
 
 				shadowCameraHelper = new THREE.CameraHelper( directionalLight.shadow.camera );
-				//scene.add(shadowCameraHelper);
+				//scene.add(shadowCameraHelper); DEBUG: not for prod
 
-				//camera
+
+				// setup camera
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 3000 );
-				camera.position.z = 500;
-				camera.position.y = 200;
-				camera.position.x = 250;
+				camera.position.z = 500; //
+				camera.position.y = 200; // à changer
+				camera.position.x = 250; //
 
-				//OrbitControls
+
+				// setup OrbitControls
 				controls = new OrbitControls( camera, renderer.domElement );
 				controls.keys = {
 					LEFT: 37,
@@ -79,18 +96,24 @@
 				};
 				controls.keyPanSpeed = 15
 
-				//textures
+
+				// load textures
 				var texture = new THREE.TextureLoader().load( 'textures/wall.jpg' );
 				var texture_roof = new THREE.TextureLoader().load( 'textures/vieux-fond-texture-tuiles-toit-altere-rouge-orange_52137-26746.jpg' );
-				var texture_ground = new THREE.TextureLoader().load( 'textures/ground_0008_base_color_2k.jpg' );
+				var texture_ground = new THREE.TextureLoader().load( 'textures/ground_0008_base_color_2k.jpg' ); // à changer pour une texture grise
 
+
+				// setup texture to repeat (instead of cover)
 				texture.wrapS = THREE.RepeatWrapping;
 				texture.wrapT = THREE.RepeatWrapping;
 				texture.repeat.set(1, 0.5);
 
+				// setup BACKGROUND
+
+
 				//GROUND
 				var ground = new THREE.PlaneBufferGeometry( 5000, 5000, 1 );
-				ground.rotateX(-Math.PI * 0.5);
+				ground.rotateX(-Math.PI * 0.5); // setup horizontally
 				var ground_texture = new THREE.MeshPhongMaterial( { map: texture_ground, side: THREE.DoubleSide} );
 				ground_mesh = new THREE.Mesh(ground, ground_texture);
 				ground_mesh.receiveShadow = true;
@@ -98,6 +121,9 @@
 				ground_mesh.position.y = -50;
 				ground_mesh.position.x = 250;
 				ground_mesh.position.z = -250;
+
+
+				// clean the whole bullshit of the rest of the function
 
 				//TOWER
 				var geometry = new THREE.CylinderBufferGeometry( 40, 40, 200, 200 );
@@ -201,33 +227,32 @@
 				scene.add(wall_tower4);
 				scene.add(roof_tower4);
 
-				window.addEventListener( 'resize', onWindowResize, false );
 
+				// call resize on window changes
+				window.addEventListener( 'resize', onWindowResize, false );
 			}
 
+
+			// resize camera when the window change resolution
 			function onWindowResize() {
 
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
-
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
-			//
 
+
+			// animation loop
 			function animate() {
 
 				requestAnimationFrame( animate );
-
-				//mesh.rotation.x += 0.05;
-				//mesh.rotation.y += 0.01;
-				//mesh2.rotation.x += 0.05;
-				//mesh2.rotation.y += 0.01;
-
 				renderer.render( scene, camera );
 
 			}
 
+
+			// DEBUG: not for prod
 			function render() {
 
 				//lightHelper.update();
