@@ -25,7 +25,7 @@
 			function init() {
 
 				scene = new THREE.Scene();
-
+				magic_object();
 				//renderer
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -214,12 +214,30 @@
 
 			}
 			//
+			function magic_object(){
+
+				var circle;
+				var texture = new THREE.TextureLoader().load( 'textures/wall.jpg' );;
+				var geometry = new THREE.CircleBufferGeometry( 30,100);
+				var material = new THREE.MeshBasicMaterial( { map: texture } );
+
+				circle = new THREE.Mesh( geometry, material );
+
+				circle.position.x = 300;
+				circle.position.y = 20;
+				circle.position.z = -250;
+				circle.castShadow = true;
+				circle.receiveShadow = true;
+				var xAxis = new THREE.Vector3(1,0,0);
+				circle.rotateOnAxis(xAxis, -1.5);
+				scene.add(circle)
+			}
 
 			function animate() {
 
 				requestAnimationFrame( animate );
 
-				//mesh.rotation.x += 0.05;
+				//circle.rotation.x += 0.05;
 				//mesh.rotation.y += 0.01;
 				//mesh2.rotation.x += 0.05;
 				//mesh2.rotation.y += 0.01;
