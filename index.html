@@ -20,6 +20,9 @@
 			// helper objects
 			let shadowCameraHelper, directionalLightHelper;
 
+			// need a counter...
+			let count = 200;
+
 
 			// basic objects
 			let camera, scene, renderer, controls, gui;
@@ -204,6 +207,23 @@
 
 				requestAnimationFrame( animate );
 				magic_disk.rotation.y +=0.02;
+
+
+				// magic_disk going up and down
+				if (count >= 0) {
+					magic_disk.position.y -=0.5;
+					count-=1;
+					if (count === 0) {
+						count -=200;
+					}
+				} else {
+					magic_disk.position.y +=0.5;
+					count+=1;
+					if (count === 0) {
+						count +=200;
+					}
+				}
+
 				renderer.render( scene, camera );
 
 			}
