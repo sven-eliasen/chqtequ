@@ -341,12 +341,12 @@
 					doors_rotation_x: doors.rotation.x
 				};
 
-				gui.add( params, 'circle', 0, 200 ).onChange( function ( val ) {
+				//gui.add( params, 'circle', 0, 200 ).onChange( function ( val ) {
 
-					circle.position.x = val;
-					render();
+					//circle.position.x = val;
+					//render();
 
-				} );
+				//} );
 
 				gui.add( params, 'light_position_x', -500, 500 ).onChange( function ( val ) {
 
@@ -355,7 +355,7 @@
 
 				} );
 
-				gui.add( params, 'light_position_y', -500, 500 ).onChange( function ( val ) {
+				gui.add( params, 'light_position_y', 0, 500 ).onChange( function ( val ) {
 
 					directionalLight.position.y = val;
 					render();
