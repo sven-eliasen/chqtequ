@@ -14,7 +14,7 @@
 			//imports
 			import * as THREE from './js/three.module.js';
 			import { OrbitControls } from './js/OrbitControls.js';
-			import { GUI } from './../jsm/libs/dat.gui.module.js';
+			import { GUI } from './js/dat.gui.module.js';
 
 			var gui;
 
@@ -175,11 +175,11 @@
 
 				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
 				var geometry = new THREE.CylinderBufferGeometry( 50,50,10,200);
-				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 100, specular : 0xffffff, opacity : 0.7, transparent : true } );
+				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 500, specular : 0xffffff, opacity : 0.7, transparent : true } );
 
 				circle = new THREE.Mesh( geometry, material );
 
-				circle.position.x = 300;
+				circle.position.x = 250;
 				circle.position.y = 100;
 				circle.position.z = -250;
 				circle.castShadow = true;
@@ -314,8 +314,8 @@
 
 			function generate_doors(){
 				let varX = 260;
-				let varY = -5;
-				let varZ = 20;
+				let varY = -50;
+				let varZ = 23;
 
 				let doors = new THREE.Mesh( geometry_doors, material_doors );;
 
