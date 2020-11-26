@@ -14,6 +14,9 @@
 			//imports
 			import * as THREE from './js/three.module.js';
 			import { OrbitControls } from './js/OrbitControls.js';
+			import { GUI } from './js/dat.gui.module.js';
+
+			var gui;
 
 
 			// helper objects
@@ -25,18 +28,21 @@
 
 
 			// world objects
-			let towers, roofs, walls, ground, directionalLight, ambient, circle;
+			let towers, roofs, walls, ground, directionalLight, ambient, circle, doors;
 
 			// load textures
 			let texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
 			let texture_roof = new THREE.TextureLoader().load( 'textures/roof.jpg' );
 			let texture_ground = new THREE.TextureLoader().load( 'textures/ground.jpg' );
 			let texture_background = new THREE.TextureLoader().load( 'textures/universe.jpg' );
+			let texture_doors = new THREE.TextureLoader().load( 'textures/doors.jpg' );
 
 
 			// geometry and materials variables
 			let geometry_tower = new THREE.CylinderBufferGeometry( 40, 40, 200, 200 );
 			let material_wall = new THREE.MeshPhongMaterial( { map: texture_wall } );
+			let material_doors = new THREE.MeshPhongMaterial( { map: texture_doors } );
+			let geometry_doors = new THREE.BoxBufferGeometry( 50, 150, 5 );
 			let geometry_roof = new THREE.ConeBufferGeometry( 50,50,32 );
 			let material_roof = new THREE.MeshPhongMaterial( { map: texture_roof } );
 			let geometry_wall_1 = new THREE.BoxBufferGeometry( 500, 100, 40 );
@@ -45,6 +51,7 @@
 
 			// basic functions call
 			init();
+			buildGui();
 			animate();
 			render();
 			function init() {
@@ -146,6 +153,10 @@
 				walls = generate_walls();
 
 
+				//doors
+				doors = generate_doors();
+
+
 				// call resize on window changes
 				window.addEventListener( 'resize', onWindowResize, false );
 			}
@@ -164,11 +175,11 @@
 
 				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
 				var geometry = new THREE.CylinderBufferGeometry( 50,50,10,200);
-				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 100, specular : 0xffffff, opacity : 0.7, transparent : true } );
+				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 500, specular : 0xffffff, opacity : 0.7, transparent : true } );
 
 				circle = new THREE.Mesh( geometry, material );
 
-				circle.position.x = 300;
+				circle.position.x = 250;
 				circle.position.y = 100;
 				circle.position.z = -250;
 				circle.castShadow = true;
@@ -298,6 +309,75 @@
 					scene.add(wall);
 				}
 				return array;
+
+			}
+
+			function generate_doors(){
+				let varX = 260;
+				let varY = -50;
+				let varZ = 23;
+
+				let doors = new THREE.Mesh( geometry_doors, material_doors );;
+
+				doors.castShadow = true;
+				doors.receiveShadow = true;
+				doors.position.x = varX;
+				doors.position.y = varY;
+				doors.position.z = varZ;
+				doors.rotation.x = 0;
+				scene.add(doors);
+				return doors;
+			}
+
+			function buildGui() {
+
+				gui = new GUI();
+
+				var params = {
+					circle: circle.position.x,
+					light_position_x: directionalLight.position.x,
+					light_position_y: directionalLight.position.y,
+					light_position_z: directionalLight.position.z,
+					doors_rotation_x: doors.rotation.x
+				};
+
+				//gui.add( params, 'circle', 0, 200 ).onChange( function ( val ) {
+
+					//circle.position.x = val;
+					//render();
+
+				//} );
+
+				gui.add( params, 'light_position_x', -500, 500 ).onChange( function ( val ) {
+
+					directionalLight.position.x = val;
+					render();
+
+				} );
+
+				gui.add( params, 'light_position_y', 0, 500 ).onChange( function ( val ) {
+
+					directionalLight.position.y = val;
+					render();
+
+				} );
+
+				gui.add( params, 'light_position_z', -500, 500 ).onChange( function ( val ) {
+
+					directionalLight.position.z = val;
+					render();
+
+				} );
+
+				gui.add( params, 'doors_rotation_x', 0, Math.PI/2 ).onChange( function ( val ) {
+
+					doors.rotation.x = val;
+					render();
+
+				} );
+
+
+				gui.open();
 
 			}
 
