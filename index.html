@@ -369,7 +369,7 @@
 
 				} );
 
-				gui.add( params, 'doors_rotation_x', 0, Math.PI/2 ).onChange( function ( val ) {
+				gui.add( params, 'open/close door', 0, Math.PI/2 ).onChange( function ( val ) {
 
 					doors.rotation.x = val;
 					render();
