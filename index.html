@@ -16,19 +16,17 @@
 			import { OrbitControls } from './js/OrbitControls.js';
 			import { GUI } from './js/dat.gui.module.js';
 
-			var gui;
-
 
 			// helper objects
 			let shadowCameraHelper, directionalLightHelper;
 
 
 			// basic objects
-			let camera, scene, renderer, controls;
+			let camera, scene, renderer, controls, gui;
 
 
 			// world objects
-			let towers, roofs, walls, ground, directionalLight, ambient, circle, doors;
+			let towers, roofs, walls, ground, directionalLight, ambient, magic_disk, doors;
 
 			// load textures
 			let texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
@@ -54,6 +52,9 @@
 			buildGui();
 			animate();
 			render();
+
+
+			// setup init
 			function init() {
 
 
@@ -95,9 +96,9 @@
 
 				// setup helpers
 				directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, 5 );
-        //scene.add( directionalLightHelper ); DEBUG: not for prod
+        //scene.add( directionalLightHelper );// DEBUG: not for prod
 				shadowCameraHelper = new THREE.CameraHelper( directionalLight.shadow.camera );
-				//scene.add(shadowCameraHelper); DEBUG: not for prod
+				//scene.add(shadowCameraHelper);// DEBUG: not for prod
 
 
 				// setup camera
@@ -108,7 +109,6 @@
 				camera.lookAt(scene.position.set(-200, 0, 200));
 
 
-				magic_object();
 				// setup OrbitControls
 				controls = new OrbitControls( camera, renderer.domElement );
 				controls.keys = {
@@ -141,24 +141,29 @@
 				ground.position.x = 250;
 				ground.position.z = -250;
 
-				//TOWER
+				// TOWERS
 				towers = generate_towers();
 
 
-				//ROOF
+				// ROOFS
 				roofs = generate_roofs();
 
 
-				//WALL
+				// WALLS
 				walls = generate_walls();
 
 
-				//doors
-				doors = generate_doors();
+				// DOOR
+				doors = generate_door();
+
+
+				// MAGIC DISK
+				magic_disk = magic_object();
 
 
 				// call resize on window changes
 				window.addEventListener( 'resize', onWindowResize, false );
+
 			}
 
 
@@ -170,14 +175,16 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
-			//
+
+
+			// create magic disk
 			function magic_object(){
 
 				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
 				var geometry = new THREE.CylinderBufferGeometry( 50,50,10,200);
 				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 500, specular : 0xffffff, opacity : 0.7, transparent : true } );
 
-				circle = new THREE.Mesh( geometry, material );
+				let circle = new THREE.Mesh( geometry, material );
 
 				circle.position.x = 250;
 				circle.position.y = 100;
@@ -185,15 +192,18 @@
 				circle.castShadow = true;
 				circle.receiveShadow = true;
 
+				scene.add(circle);
 
-				scene.add(circle)
+				return circle;
+
 			}
 
 
 			// animation loop
 			function animate() {
+
 				requestAnimationFrame( animate );
-				circle.rotation.y +=0.02;
+				magic_disk.rotation.y +=0.02;
 				renderer.render( scene, camera );
 
 			}
@@ -307,12 +317,13 @@
 					wall.position.z = varZ;
 					array.push(wall);
 					scene.add(wall);
+
 				}
 				return array;
 
 			}
 
-			function generate_doors(){
+			function generate_door(){
 				let varX = 260;
 				let varY = -50;
 				let varZ = 23;
@@ -327,6 +338,7 @@
 				doors.rotation.x = 0;
 				scene.add(doors);
 				return doors;
+
 			}
 
 			function buildGui() {
@@ -334,7 +346,7 @@
 				gui = new GUI();
 
 				var params = {
-					circle: circle.position.x,
+					//circle: circle.position.x,
 					light_position_x: directionalLight.position.x,
 					light_position_y: directionalLight.position.y,
 					light_position_z: directionalLight.position.z,
