@@ -113,14 +113,19 @@
 
 
 				// setup OrbitControls
-				controls = new OrbitControls( camera, renderer.domElement );
-				controls.keys = {
-					LEFT: 37,
-					UP: 38,
-					RIGHT: 39,
-					BOTTOM: 40
-				};
-				controls.keyPanSpeed = 15
+				//controls = new OrbitControls( camera, renderer.domElement );
+				//controls.keys = {
+				//	LEFT: 37,
+				//	UP: 38,
+				//	RIGHT: 39,
+				//	BOTTOM: 40
+				//};
+				//controls.keyPanSpeed = 15
+				
+				
+				controls = new PointerLockControls(camera, renderer.domElement);
+				controls.lock();
+				document.addEventListener('keydown', Keyboard, false);
 
 
 				// setup background
@@ -178,6 +183,22 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
+			
+			
+			function Keyboard() {
+				let speed = 1;
+				if (event.keyCode == 90){
+					controls.moveForward(speed);
+				}
+				if (event.keyCode == 83) {
+					controls.moveForward(-speed);
+				}
+				if (event.keyCode == 81) {
+					controls.moveRight(speed);
+				}
+				if (event.keyCode == 68) {
+					controls.moveRight(-speed);
+				}
 
 
 			// create magic disk
