@@ -15,7 +15,10 @@
 			import * as THREE from './js/three.module.js';
 			import { OrbitControls } from './js/OrbitControls.js';
 			import { GUI } from './js/dat.gui.module.js';
-
+			import { AudioListener } from './js/audio/AudioListener.js';
+			//import { PositionalAudio } from './js/audio/AudioListener.js';
+			import { Audio } from './js/audio/Audio.js';
+			import { AudioLoader } from './js/audio/AudioLoader.js';
 
 			// helper objects
 			let shadowCameraHelper, directionalLightHelper;
@@ -23,6 +26,10 @@
 			// need a counter...
 			let count = 200;
 
+			// sound variables
+			let listener, step_sound, step_Loader, global_sound, global_loader;
+			let location_step_sound = "sound/336598__inspectorj__footsteps-concrete-a.wav";
+			let location_global_sound = "sound/la-bourree-des-serfs-musique-medievale-frederic-laurent.mp3";
 
 			// basic objects
 			let camera, scene, renderer, controls, gui;
@@ -54,6 +61,7 @@
 			init();
 			buildGui();
 			animate();
+			globalsound();
 			render();
 
 
@@ -201,6 +209,26 @@
 
 			}
 
+			// create a global sound
+			function globalsound(){
+					camera_listener();
+
+					global_sound = new THREE.Audio(listener); // listener can hear global_sound
+
+					global_loader = new THREE.AudioLoader();
+					global_loader.load( location_global_sound, function (buffer){
+						global_sound.setBuffer(buffer);
+						global_sound.setLoop(true);
+						global_sound.setVolume(0.5);
+						global_sound.play();
+					});
+			}
+
+			// function used to add camera in listener of a sound
+			function camera_listener(){
+				listener = new THREE.AudioListener();
+				camera.add(listener);
+			}
 
 			// animation loop
 			function animate() {
