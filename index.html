@@ -45,10 +45,10 @@
 			let location_step_sound = "sound/336598__inspectorj__footsteps-concrete-a.wav";
 
 			// basic objects
-			let camera, scene, renderer, controls, gui, stats;
+			let camera, scene, renderer, controls, gui, stats, clock;
 
 			// animations
-			let loader, avatar, animations, mixer;
+			let loader, avatar, animations, mixer, action;
 
 
 			// world objects
@@ -79,7 +79,7 @@
 			function launch(){
 				init();
 				buildGui();
-				render();
+				//render();
 				animate();
 			}
 
@@ -105,6 +105,9 @@
 				// stats
 				stats = new Stats();
 				document.body.appendChild( stats.dom );
+
+				// clock
+				clock = new THREE.Clock();
 
 
 				// enable shadows in renderer
@@ -188,7 +191,8 @@
 				loader.load( './models/stormtrooper/stormtrooper.dae', function ( collada ) {
 
 					avatar = collada.scene;
-					animations = avatar.animations;
+					animations = collada.animations;
+					console.log(animations);
 
 					avatar.traverse( function ( node ) {
 
@@ -201,8 +205,11 @@
 					} );
 
 					mixer = new THREE.AnimationMixer( avatar );
-					mixer.clipAction( animations[ 0 ] ).play();
+					action = mixer.clipAction( animations[0] );
+					action.play();
 
+					avatar.scale.set(20, 20, 20);
+					avatar.position.set(250, -50, 100);
 					scene.add( avatar );
 
 				} );
@@ -323,7 +330,7 @@
 			// animation loop
 			function animate() {
 
-				requestAnimationFrame( animate );
+
 				magic_disk.rotation.y +=0.02;
 
 
@@ -341,9 +348,10 @@
 						count +=200;
 					}
 				}
+
+				render();
 				requestAnimationFrame( animate );
 				stats.update();
-				renderer.render( scene, camera );
 
 			}
 
@@ -351,14 +359,14 @@
 			// render : lmao idk why i wrote that
 			function render() {
 
+				const delta = clock.getDelta();
+
+				if ( mixer ) {
+					mixer.update( delta );
+				}
+
 				shadowCameraHelper.update();
 				directionalLightHelper.update();
-
-				if ( mixer !== undefined ) {
-
-					mixer.update( delta );
-
-				}
 
 				renderer.render( scene, camera );
 
