@@ -7,14 +7,21 @@
 		<link type="text/css" rel="stylesheet" href="css/main.css">
 	</head>
 	<body>
-		<script type="module">
 
+		<div id="menu">
+			<button id="start">Askip ca marche si tu cliques</button>
+		</div>
+
+		<script type="module">
 
 			//imports
 			import * as THREE from './js/three.module.js';
 			import { GUI } from './js/dat.gui.module.js';
+			import { AudioListener } from './js/audio/AudioListener.js';
+			import { PositionalAudio } from './js/audio/PositionalAudio.js';
+			import { Audio } from './js/audio/Audio.js';
+			import { AudioLoader } from './js/audio/AudioLoader.js';
 			import { PointerLockControls } from './js/PointerLockControls.js';
-
 
 			// helper objects
 			let shadowCameraHelper, directionalLightHelper;
@@ -22,6 +29,10 @@
 			// need a counter...
 			let count = 200;
 
+			// sound variables
+			let listener, step_sound, step_Loader, global_sounds, global_loader;
+			let location_step_sound = "sound/336598__inspectorj__footsteps-concrete-a.wav";
+			let location_global_sound = "sound/la-bourree-des-serfs-musique-medievale-frederic-laurent.mp3";
 
 			// basic objects
 			let camera, scene, renderer, controls, gui;
@@ -49,12 +60,24 @@
 			let geometry_wall_2 = new THREE.BoxBufferGeometry( 40, 100, 500 );
 
 
-			// basic functions call
-			init();
-			buildGui();
-			animate();
-			render();
 
+			//delete menu and launch all basics functions
+			var startButton = document.getElementById( 'start' ).addEventListener( 'click', remove_menu );
+
+			function remove_menu(){
+				var menu = document.getElementById( 'menu' ).remove;
+				launch();
+		}
+
+			// basic functions call
+			function launch(){
+				init();
+				buildGui();
+				animate();
+				//global_sound();
+				guard_step();
+				render();
+			}
 
 			// setup init
 			function init() {
@@ -223,6 +246,40 @@
 
 			}
 
+			// create a global sound
+			function global_sound(){
+					camera_listener();
+
+					global_sounds = new THREE.Audio(listener); // listener can hear global_sound
+
+					global_loader = new THREE.AudioLoader();
+					global_loader.load( location_global_sound, function (buffer){
+						global_sounds.setBuffer(buffer);
+						global_sounds.setLoop(true);
+						global_sounds.setVolume(0.1);
+						global_sounds.play();
+					});
+			}
+
+			function guard_step(){
+				camera_listener();
+				step_sound = new THREE.PositionalAudio(listener);
+
+				step_Loader = new THREE.AudioLoader();
+				step_Loader.load(location_step_sound, function(buffer){
+					step_sound.setBuffer(buffer);
+					step_sound.setRefDistance(20);
+					step_sound.setVolume(0.5);
+					step_sound.play();
+				});
+				magic_disk.add(step_sound)
+			}
+
+			// function used to add camera in listener of a sound
+			function camera_listener(){
+				listener = new THREE.AudioListener();
+				camera.add(listener);
+			}
 
 			// animation loop
 			function animate() {
