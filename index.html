@@ -5,8 +5,19 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="css/main.css">
+		<style media="screen">
+			#menu{
+				position: absolute;
+				width: 100%;
+				text-align: center;
+				background-color: rgba(0, 0, 0, 0.5);
+			}
+		</style>
 	</head>
 	<body>
+		<div id="menu">
+			<h1>Click to move !</h1>
+		</div>
 
 		<script type="module">
 
@@ -22,13 +33,13 @@
 			// helper objects
 			let shadowCameraHelper, directionalLightHelper;
 
-			// need a counter...
+			// need some counters...
 			let count = 200;
+			let count2 = 0;
 
 			// sound variables
-			let listener, step_sound, step_Loader, global_sounds, global_loader;
+			let listener, step_sound, step_Loader;
 			let location_step_sound = "sound/336598__inspectorj__footsteps-concrete-a.wav";
-			//let location_global_sound = "sound/la-bourree-des-serfs-musique-medievale-frederic-laurent.mp3";
 
 			// basic objects
 			let camera, scene, renderer, controls, gui;
@@ -56,13 +67,6 @@
 			let geometry_wall_2 = new THREE.BoxBufferGeometry( 40, 100, 500 );
 
 
-
-			//delete menu and launch all basics functions
-			//var startButton = document.getElementById( 'start' ).addEventListener( 'click', remove_menu );
-
-			//function remove_menu(){
-			//	var menu = document.getElementById( 'menu' ).remove();
-			//}
 			launch();
 
 			// basic functions call
@@ -135,6 +139,14 @@
 
 				// setup firstPersonControl
 				controls = new PointerLockControls(camera, renderer.domElement);
+				controls.addEventListener('lock', function () {
+					let menu = document.getElementById("menu");
+					menu.style.display = "none";
+				});
+				controls.addEventListener('unlock', function () {
+					let menu = document.getElementById("menu");
+					menu.style.display = "block";
+				});
 				// on click, lock the pointer on mouse
 				document.addEventListener('keydown', Keyboard, false);
 
@@ -187,7 +199,11 @@
 				// things to call on user click
 				document.addEventListener( 'click', function () {
 					controls.lock();
-					guard_step();
+
+					if (count2 == 0) {
+						count2++;
+						guard_step();
+					}
 				}, false );
 
 			}
