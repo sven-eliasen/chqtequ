@@ -30,6 +30,7 @@
 			import { AudioLoader } from './js/audio/AudioLoader.js';
 			import { PointerLockControls } from './js/PointerLockControls.js';
 			import Stats from './js/stats.module.js';
+			import { ColladaLoader } from './js/ColladaLoader.js';
 
 
 			// helper objects
@@ -45,6 +46,9 @@
 
 			// basic objects
 			let camera, scene, renderer, controls, gui, stats;
+
+			// animations
+			let loader, avatar, animations, mixer;
 
 
 			// world objects
@@ -177,6 +181,31 @@
 				ground.position.y = -50;
 				ground.position.x = 250;
 				ground.position.z = -250;
+
+
+				//collada
+				loader = new ColladaLoader();
+				loader.load( './models/stormtrooper/stormtrooper.dae', function ( collada ) {
+
+					avatar = collada.scene;
+					animations = avatar.animations;
+
+					avatar.traverse( function ( node ) {
+
+						if ( node.isSkinnedMesh ) {
+
+							node.frustumCulled = false;
+
+						}
+
+					} );
+
+					mixer = new THREE.AnimationMixer( avatar );
+					mixer.clipAction( animations[ 0 ] ).play();
+
+					scene.add( avatar );
+
+				} );
 
 				// TOWERS
 				towers = generate_towers();
@@ -312,6 +341,7 @@
 						count +=200;
 					}
 				}
+				requestAnimationFrame( animate );
 				stats.update();
 				renderer.render( scene, camera );
 
@@ -323,6 +353,13 @@
 
 				shadowCameraHelper.update();
 				directionalLightHelper.update();
+
+				if ( mixer !== undefined ) {
+
+					mixer.update( delta );
+
+				}
+
 				renderer.render( scene, camera );
 
 			}
