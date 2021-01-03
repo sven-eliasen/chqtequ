@@ -16,12 +16,13 @@
 
 			//imports
 			import * as THREE from './js/three.module.js';
-			import { OrbitControls } from './js/OrbitControls.js';
 			import { GUI } from './js/dat.gui.module.js';
 			import { AudioListener } from './js/audio/AudioListener.js';
 			import { PositionalAudio } from './js/audio/PositionalAudio.js';
 			import { Audio } from './js/audio/Audio.js';
 			import { AudioLoader } from './js/audio/AudioLoader.js';
+			import { PointerLockControls } from './js/PointerLockControls.js';
+
 
 			// helper objects
 			let shadowCameraHelper, directionalLightHelper;
@@ -131,18 +132,17 @@
 				camera.position.z = 20;
 				camera.position.y = 450;
 				camera.position.x = -350;
-				camera.lookAt(scene.position.set(-200, 0, 200));
+				camera.lookAt(scene.position.set(-200, 100, 200));
 
 
-				// setup OrbitControls
-				controls = new OrbitControls( camera, renderer.domElement );
-				controls.keys = {
-					LEFT: 37,
-					UP: 38,
-					RIGHT: 39,
-					BOTTOM: 40
-				};
-				controls.keyPanSpeed = 15
+				// setup firstPersonControl
+				controls = new PointerLockControls(camera, renderer.domElement);
+
+				// on click, lock the pointer on mouse
+				document.addEventListener( 'click', function () {
+					controls.lock();
+				}, false );
+				document.addEventListener('keydown', Keyboard, false);
 
 
 				// setup background
@@ -199,6 +199,30 @@
 				camera.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
+			}
+
+
+			// move with zqsd
+			function Keyboard() {
+				let speed = 10;
+				if (event.keyCode == 90){
+					controls.moveForward(speed);
+				}
+				if (event.keyCode == 83) {
+					controls.moveForward(-speed);
+				}
+				if (event.keyCode == 68) {
+					controls.moveRight(speed);
+				}
+				if (event.keyCode == 81) {
+					controls.moveRight(-speed);
+				}
+				if (event.keyCode == 16) {
+					camera.position.y = camera.position.y - speed;
+				}
+				if (event.keyCode == 32) {
+					camera.position.y = camera.position.y + speed;
+				}
 			}
 
 
