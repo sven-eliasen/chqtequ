@@ -29,6 +29,8 @@
 			import { Audio } from './js/audio/Audio.js';
 			import { AudioLoader } from './js/audio/AudioLoader.js';
 			import { PointerLockControls } from './js/PointerLockControls.js';
+			import Stats from './js/stats.module.js';
+
 
 			// helper objects
 			let shadowCameraHelper, directionalLightHelper;
@@ -42,7 +44,7 @@
 			let location_step_sound = "sound/336598__inspectorj__footsteps-concrete-a.wav";
 
 			// basic objects
-			let camera, scene, renderer, controls, gui;
+			let camera, scene, renderer, controls, gui, stats;
 
 
 			// world objects
@@ -95,6 +97,10 @@
 				manager.onProgress = function ( item, loaded, total ) {
   				console.log("mes couilles");
 				};
+
+				// stats
+				stats = new Stats();
+				document.body.appendChild( stats.dom );
 
 
 				// enable shadows in renderer
@@ -197,7 +203,7 @@
 
 
 				// things to call on user click
-				document.addEventListener( 'click', function () {
+				renderer.domElement.addEventListener( 'click', function () {
 					controls.lock();
 
 					if (count2 == 0) {
@@ -306,7 +312,7 @@
 						count +=200;
 					}
 				}
-
+				stats.update();
 				renderer.render( scene, camera );
 
 			}
