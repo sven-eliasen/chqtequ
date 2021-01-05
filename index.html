@@ -54,12 +54,17 @@
 			// world objects
 			let towers, roofs, walls, ground, directionalLight, ambient, magic_disk, doors;
 
+			let manager = new THREE.LoadingManager();
+			manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+				console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+			};
+
 			// load textures
-			let texture_wall = new THREE.TextureLoader().load( 'textures/wall.jpg' );
-			let texture_roof = new THREE.TextureLoader().load( 'textures/roof.jpg' );
-			let texture_ground = new THREE.TextureLoader().load( 'textures/ground.jpg' );
-			let texture_background = new THREE.TextureLoader().load( 'textures/universe.jpg' );
-			let texture_doors = new THREE.TextureLoader().load( 'textures/doors.jpg' );
+			let texture_wall = new THREE.TextureLoader(manager).load( 'textures/wall.jpg' );
+			let texture_roof = new THREE.TextureLoader(manager).load( 'textures/roof.jpg' );
+			let texture_ground = new THREE.TextureLoader(manager).load( 'textures/ground.jpg' );
+			let texture_background = new THREE.TextureLoader(manager).load( 'textures/universe.jpg' );
+			let texture_doors = new THREE.TextureLoader(manager).load( 'textures/doors.jpg' );
 
 
 			// geometry and materials variables
@@ -96,11 +101,6 @@
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
-
-				var manager = new THREE.LoadingManager();
-				manager.onProgress = function ( item, loaded, total ) {
-  				console.log("mes couilles");
-				};
 
 				// stats
 				stats = new Stats();
@@ -187,12 +187,11 @@
 
 
 				//collada
-				loader = new ColladaLoader();
+				loader = new ColladaLoader(manager);
 				loader.load( './models/stormtrooper/stormtrooper.dae', function ( collada ) {
 
 					avatar = collada.scene;
 					animations = collada.animations;
-					console.log(animations);
 
 					avatar.traverse( function ( node ) {
 
@@ -288,7 +287,7 @@
 			// create magic disk
 			function magic_object(){
 
-				var texture = new THREE.TextureLoader().load( 'textures/glass.jpg' );;
+				var texture = new THREE.TextureLoader(manager).load( 'textures/glass.jpg' );;
 				var geometry = new THREE.CylinderBufferGeometry( 50,50,10,200);
 				var material = new THREE.MeshPhongMaterial( { map: texture, shininess: 500, specular : 0xffffff, opacity : 0.7, transparent : true } );
 
@@ -310,7 +309,7 @@
 				camera_listener();
 				step_sound = new THREE.PositionalAudio(listener);
 
-				step_Loader = new THREE.AudioLoader();
+				step_Loader = new THREE.AudioLoader(manager);
 				step_Loader.load(location_step_sound, function(buffer){
 					step_sound.setBuffer(buffer);
 					step_sound.setLoop(true);
