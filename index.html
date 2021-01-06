@@ -48,7 +48,8 @@
 			let camera, scene, renderer, controls, gui, stats, clock;
 
 			// animations
-			let loader, avatar, animations, mixer, action;
+			let loader, avatar, avatar_2, avatar_3, animations, mixer, action;
+			let mixers = new Array();
 
 
 			// world objects
@@ -187,9 +188,9 @@
 
 
 				//collada
+				/*
 				loader = new ColladaLoader();
-				loader.load( './models/stormtrooper/stormtrooper.dae', function ( collada ) {
-
+				loader.load( './models/Walk In Circle/Walk In Circle.dae', function ( collada ) {
 					avatar = collada.scene;
 					animations = collada.animations;
 					console.log(animations);
@@ -206,13 +207,51 @@
 
 					mixer = new THREE.AnimationMixer( avatar );
 					action = mixer.clipAction( animations[0] );
+					console.log(action);
 					action.play();
 
-					avatar.scale.set(20, 20, 20);
-					avatar.position.set(250, -50, 100);
+					avatar.scale.set(0.50, 0.50, 0.50);
+					avatar.position.set(50, -50, -250);
 					scene.add( avatar );
 
 				} );
+				*/
+				function CaracterAnimation(object,animation_src,x,y,z){
+					loader = new ColladaLoader();
+					loader.load( animation_src, function ( collada ) {
+						object = collada.scene;
+						animations = collada.animations;
+						console.log(object);
+
+						object.traverse( function ( node ) {
+
+							if ( node.isSkinnedMesh ) {
+
+								node.frustumCulled = false;
+
+							}
+
+						} );
+
+						var mixer = new THREE.AnimationMixer( object );
+						mixer.clipAction( animations[0] ).play();
+
+
+						/*
+
+						mixer = new THREE.AnimationMixer( object );
+						action = mixer.clipAction( animations[0] );
+						console.log(action);
+						action.play();
+						*/
+
+						object.scale.set(0.5, 0.50, 0.50);
+						object.position.set(x, y, z);
+						scene.add( object );
+						mixers.push( mixer );
+
+					} );
+				}
 
 				// TOWERS
 				towers = generate_towers();
@@ -233,6 +272,9 @@
 				// MAGIC DISK
 				magic_disk = magic_object();
 
+				//ColladaLoader
+				CaracterAnimation(avatar,'./models/Northern Soul Spin Combo/Northern Soul Spin Combo.dae',2, 48, -250);
+				CaracterAnimation(avatar_2,'./models/Walk In Circle/Walk In Circle.dae',50, -50, -250);
 
 				// call resize on window changes
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -361,8 +403,10 @@
 
 				const delta = clock.getDelta();
 
-				if ( mixer ) {
-					mixer.update( delta );
+				if(mixers.length > 1){
+					for(let i = 0; i < mixers.length; i++){
+						mixers[i].update(delta);
+					}
 				}
 
 				shadowCameraHelper.update();
