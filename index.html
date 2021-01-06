@@ -12,13 +12,26 @@
 				text-align: center;
 				background-color: rgba(0, 0, 0, 0.5);
 			}
+			#main{
+				text-align: center;
+			}
+			#loader{
+				padding-top: 20%;
+			}
 		</style>
 	</head>
 	<body>
-		<div id="menu">
+		<div id="menu" hidden>
 			<h1>Click to move !</h1>
 		</div>
 
+		<main id="main">
+			<div id="loader">
+				<h1>Loading...</h1>
+				<progress value="0" max="8" id="bar">0%</progress><br>
+				<textarea name="name" rows="8" cols="80" id="textarea">Test</textarea>
+			</div>
+		</main>
 		<script type="module">
 
 			//imports
@@ -45,7 +58,7 @@
 			let location_step_sound = "sound/336598__inspectorj__footsteps-concrete-a.wav";
 
 			// basic objects
-			let camera, scene, renderer, controls, gui, stats, clock;
+			let camera, scene, renderer, controls, gui, stats, clock, manager;
 
 			// animations
 			let loader, avatar, animations, mixer, action;
@@ -54,10 +67,10 @@
 			// world objects
 			let towers, roofs, walls, ground, directionalLight, ambient, magic_disk, doors;
 
-			let manager = new THREE.LoadingManager();
-			manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
-				console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-			};
+
+			// loader manager
+			manager = get_manager();
+
 
 			// load textures
 			let texture_wall = new THREE.TextureLoader(manager).load( 'textures/wall.jpg' );
@@ -84,7 +97,7 @@
 			function launch(){
 				init();
 				buildGui();
-				//render();
+				guard_step();
 				animate();
 			}
 
@@ -101,10 +114,12 @@
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
+				renderer.domElement.style.display = "none";
 
 				// stats
 				stats = new Stats();
 				document.body.appendChild( stats.dom );
+				stats.dom.style.display = "none";
 
 				// clock
 				clock = new THREE.Clock();
@@ -243,7 +258,7 @@
 
 					if (count2 == 0) {
 						count2++;
-						guard_step();
+						step_sound.play();
 					}
 				}, false );
 
@@ -256,6 +271,40 @@
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+
+			function get_manager() {
+				let progressBar = document.getElementById("bar");
+				let textarea = document.getElementById("textarea");
+				let manager = new THREE.LoadingManager();
+
+				manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+
+					progressBar.setAttribute("value", itemsLoaded);
+					progressBar.setAttribute("max", itemsTotal);
+					textarea.innerHTML = textarea.innerHTML + "\r\n" + url;
+
+				};
+				manager.onLoad = function ( ) {
+
+					let main = document.getElementById("main");
+					main.style.display = "none";
+					renderer.domElement.style.display = "block";
+					stats.dom.style.display = "block";
+					let menu = document.getElementById("menu");
+					menu.style.display = "block";
+					gui.domElement.style.display = "block";
+
+				};
+				manager.onError = function ( url ) {
+
+					console.log( 'There was an error loading ' + url );
+
+				};
+
+				return manager;
 
 			}
 
@@ -308,14 +357,15 @@
 			function guard_step(){
 				camera_listener();
 				step_sound = new THREE.PositionalAudio(listener);
-
+				// load sound
 				step_Loader = new THREE.AudioLoader(manager);
+
 				step_Loader.load(location_step_sound, function(buffer){
 					step_sound.setBuffer(buffer);
 					step_sound.setLoop(true);
 					step_sound.setRefDistance(20);
 					step_sound.setVolume(0.5);
-					step_sound.play();
+					//step_sound.play();
 				});
 				magic_disk.add(step_sound)
 			}
@@ -497,6 +547,7 @@
 			function buildGui() {
 
 				gui = new GUI();
+				gui.domElement.style.display = "none";
 
 				var params = {
 					//circle: circle.position.x,
