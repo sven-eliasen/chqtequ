@@ -61,7 +61,8 @@
 			let camera, scene, renderer, controls, gui, stats, clock, manager;
 
 			// animations
-			let loader, avatar, animations, mixer, action;
+			let loader, avatar, avatar_2, avatar_3, animations, mixer, action;
+			let mixers = new Array();
 
 
 			// world objects
@@ -201,33 +202,6 @@
 				ground.position.z = -250;
 
 
-				//collada
-				loader = new ColladaLoader(manager);
-				loader.load( './models/stormtrooper/stormtrooper.dae', function ( collada ) {
-
-					avatar = collada.scene;
-					animations = collada.animations;
-
-					avatar.traverse( function ( node ) {
-
-						if ( node.isSkinnedMesh ) {
-
-							node.frustumCulled = false;
-
-						}
-
-					} );
-
-					mixer = new THREE.AnimationMixer( avatar );
-					action = mixer.clipAction( animations[0] );
-					action.play();
-
-					avatar.scale.set(20, 20, 20);
-					avatar.position.set(250, -50, 100);
-					scene.add( avatar );
-
-				} );
-
 				// TOWERS
 				towers = generate_towers();
 
@@ -247,6 +221,9 @@
 				// MAGIC DISK
 				magic_disk = magic_object();
 
+				//ColladaLoader
+				CharacterAnimation(avatar,'./models/Northern Soul Spin Combo/Northern Soul Spin Combo.dae',10, 48, -250);
+				CharacterAnimation(avatar_2,'./models/Walk In Circle/Walk In Circle.dae',50, -50, -250);
 
 				// call resize on window changes
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -262,6 +239,36 @@
 					}
 				}, false );
 
+			}
+
+			// guard animation
+			function CharacterAnimation(object,animation_src,x,y,z){
+				loader = new ColladaLoader();
+				loader.load( animation_src, function ( collada ) {
+					object = collada.scene;
+					animations = collada.animations;
+
+					object.traverse( function ( node ) {
+
+						if ( node.isSkinnedMesh ) {
+
+							node.frustumCulled = false;
+							node.castShadow = true;
+							node.receiveShadow = true;
+
+						}
+
+					} );
+
+					var mixer = new THREE.AnimationMixer( object );
+					mixer.clipAction( animations[0] ).play();
+
+					object.scale.set(0.5, 0.50, 0.50);
+					object.position.set(x, y, z);
+					scene.add( object );
+					mixers.push( mixer );
+
+				} );
 			}
 
 
@@ -364,10 +371,11 @@
 					step_sound.setBuffer(buffer);
 					step_sound.setLoop(true);
 					step_sound.setRefDistance(20);
-					step_sound.setVolume(0.5);
-					//step_sound.play();
+					step_sound.setVolume(0.8);
+					step_sound.play();
+
 				});
-				magic_disk.add(step_sound)
+				avatar_2.add(step_sound)
 			}
 
 			// function used to add camera in listener of a sound
@@ -410,8 +418,10 @@
 
 				const delta = clock.getDelta();
 
-				if ( mixer ) {
-					mixer.update( delta );
+				if(mixers.length > 1){
+					for(let i = 0; i < mixers.length; i++){
+						mixers[i].update(delta);
+					}
 				}
 
 				shadowCameraHelper.update();
