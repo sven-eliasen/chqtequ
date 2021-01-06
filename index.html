@@ -98,7 +98,6 @@
 			function launch(){
 				init();
 				buildGui();
-				guard_step();
 				animate();
 			}
 
@@ -235,7 +234,7 @@
 
 					if (count2 == 0) {
 						count2++;
-						step_sound.play();
+						guard_step();
 					}
 				}, false );
 
@@ -243,7 +242,7 @@
 
 			// guard animation
 			function CharacterAnimation(object, animation_src, x, y, z){
-				loader = new ColladaLoader();
+				loader = new ColladaLoader(manager);
 				loader.load( animation_src, function ( collada ) {
 					object = collada.scene;
 					animations = collada.animations;
@@ -372,10 +371,10 @@
 					step_sound.setLoop(true);
 					step_sound.setRefDistance(20);
 					step_sound.setVolume(0.8);
-					//step_sound.play();
+					step_sound.play();
 
 				});
-				avatar_2.add(step_sound)
+				avatar_2.add(step_sound);
 			}
 
 			// function used to add camera in listener of a sound
