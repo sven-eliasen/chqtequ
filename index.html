@@ -234,7 +234,7 @@
 
 					if (count2 == 0) {
 						count2++;
-						guard_step();
+						step_sound.play();
 					}
 				}, false );
 
@@ -258,6 +258,9 @@
 						}
 
 					} );
+					if (animation_src === "./models/Walk In Circle/Walk In Circle.dae") {
+						guard_step(object);
+					}
 
 					var mixer = new THREE.AnimationMixer( object );
 					mixer.clipAction( animations[0] ).play();
@@ -360,21 +363,21 @@
 
 			}
 
-			function guard_step(){
+			function guard_step(avatar_object){
 				camera_listener();
 				step_sound = new THREE.PositionalAudio(listener);
 				// load sound
-				step_Loader = new THREE.AudioLoader(); //fix bug du double load
+				step_Loader = new THREE.AudioLoader(manager); //fix bug du double load
 
 				step_Loader.load(location_step_sound, function(buffer){
 					step_sound.setBuffer(buffer);
 					step_sound.setLoop(true);
-					step_sound.setRefDistance(20);
-					step_sound.setVolume(0.8);
-					step_sound.play();
+					step_sound.setRefDistance(10);
+					step_sound.setVolume(5.0);
+					//step_sound.play();
 
 				});
-				avatar_2.add(step_sound);
+				avatar_object.add(step_sound);
 			}
 
 			// function used to add camera in listener of a sound
