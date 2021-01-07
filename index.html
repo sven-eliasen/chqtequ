@@ -61,7 +61,7 @@
 			let camera, scene, renderer, controls, gui, stats, clock, manager;
 
 			// animations
-			let loader, avatar, avatar_2, avatar_3, animations, mixer, action;
+			let loader, avatar, avatar_2, avatar_3, animations, mixer, action, pivot;
 			let mixers = new Array();
 
 
@@ -85,7 +85,7 @@
 			let geometry_tower = new THREE.CylinderBufferGeometry( 40, 40, 200, 200 );
 			let material_wall = new THREE.MeshPhongMaterial( { map: texture_wall } );
 			let material_doors = new THREE.MeshPhongMaterial( { map: texture_doors } );
-			let geometry_doors = new THREE.BoxBufferGeometry( 50, 150, 5 );
+			let geometry_doors = new THREE.BoxBufferGeometry( 50, 75, 5 );
 			let geometry_roof = new THREE.ConeBufferGeometry( 50,50,32 );
 			let material_roof = new THREE.MeshPhongMaterial( { map: texture_roof } );
 			let geometry_wall_1 = new THREE.BoxBufferGeometry( 500, 100, 40 );
@@ -215,6 +215,11 @@
 
 				// DOOR
 				doors = generate_door();
+
+				pivot = new THREE.Group();
+				pivot.position.set(0,-50,23);
+				scene.add(pivot);
+				pivot.add(doors);
 
 
 				// MAGIC DISK
@@ -540,8 +545,8 @@
 
 			function generate_door(){
 				let varX = 260;
-				let varY = -50;
-				let varZ = 23;
+				let varY = 40;
+				let varZ = 0;
 
 				let doors = new THREE.Mesh( geometry_doors, material_doors );;
 
@@ -566,15 +571,8 @@
 					light_position_x: directionalLight.position.x,
 					light_position_y: directionalLight.position.y,
 					light_position_z: directionalLight.position.z,
-					doors_rotation_x: doors.rotation.x
+					doors_rotation_x: pivot.rotation.x
 				};
-
-				//gui.add( params, 'circle', 0, 200 ).onChange( function ( val ) {
-
-					//circle.position.x = val;
-					//render();
-
-				//} );
 
 				gui.add( params, 'light_position_x', -500, 500 ).onChange( function ( val ) {
 
@@ -599,7 +597,7 @@
 
 				gui.add( params, 'doors_rotation_x', 0, Math.PI/2 ).onChange( function ( val ) {
 
-					doors.rotation.x = val;
+					pivot.rotation.x = val;
 					render();
 
 				} );
