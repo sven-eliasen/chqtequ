@@ -364,7 +364,7 @@
 				camera_listener();
 				step_sound = new THREE.PositionalAudio(listener);
 				// load sound
-				step_Loader = new THREE.AudioLoader(manager);
+				step_Loader = new THREE.AudioLoader(); //fix bug du double load
 
 				step_Loader.load(location_step_sound, function(buffer){
 					step_sound.setBuffer(buffer);
